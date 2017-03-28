@@ -1,0 +1,1 @@
+1.初始化HashMap时并不创建 table 只初threadhold(找到大于给定值最小的2的幂次方）和loadfactor
