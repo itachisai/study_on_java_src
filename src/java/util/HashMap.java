@@ -514,7 +514,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                     threshold = tableSizeFor(t);
             }
             else if (s > threshold)
-                resize();
+                resize();											//要是 s比resize后的threadhold 还大呢？不会造成插入过程中多次resize？
             for (Map.Entry<? extends K, ? extends V> e : m.entrySet()) {
                 K key = e.getKey();
                 V value = e.getValue();
@@ -665,7 +665,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             }
         }
         ++modCount;
-        if (++size > threshold)
+        if (++size > threshold)      // only when new mapping added size++ modCount change count++
             resize();
         afterNodeInsertion(evict);
         return null;
@@ -724,7 +724,9 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                         Node<K,V> next;
                         do {
                             next = e.next;
-                            if ((e.hash & oldCap) == 0) {
+                            if ((e.hash & oldCap) == 0) {  //假设 oldcap为 k 位，那么此时 e.hash低k-1位一样，
+                            							   //通过 k位来判断是否需要放到扩容后 的新tab另一半，扩容一倍，
+                            							   //此时的 index 为现在index 加上现在的cap。即第k位。
                                 if (loTail == null)
                                     loHead = e;
                                 else
